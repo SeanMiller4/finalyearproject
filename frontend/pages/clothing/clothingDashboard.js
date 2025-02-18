@@ -37,7 +37,7 @@ const ClothingDashboard = () => {
           onClick={() => handleNavigation('/clothing/clothingReports')}
           style={buttonStyle}
         >
-          View Sales Reports
+          View On Map
         </button>
 
         <button

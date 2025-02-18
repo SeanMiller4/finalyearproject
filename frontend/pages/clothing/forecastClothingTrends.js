@@ -15,16 +15,16 @@ export default function Predictions() {
     const fetchPredictions = async () => {
       try {
         const responses = await Promise.all([
-          fetch('http://localhost:8080/recommendations/predict'),
-          fetch('http://localhost:8080/recommendations/predict/clothing'),
-          fetch('http://localhost:8080/recommendations/predict/accessories')
+          fetch('http://localhost:8080/api'),
+          fetch('http://localhost:8080/api/clothing'),
+          fetch('http://localhost:8080/api/accessories')
         ]);
 
         const [overall, clothing, accessories] = await Promise.all(responses.map(res => res.json()));
 
-        setOverallPredictions(overall);
-        setClothingPredictions(clothing);
-        setAccessoriesPredictions(accessories);
+        setOverallPredictions(Array.isArray(overall) ? overall : []);
+        setClothingPredictions(Array.isArray(clothing) ? clothing : []);
+        setAccessoriesPredictions(Array.isArray(accessories) ? accessories : []);
       } catch (error) {
         console.error('Error fetching predictions:', error);
       }
@@ -35,74 +35,100 @@ export default function Predictions() {
 
   const fetchSubcategoryPredictions = async (subcategory) => {
     try {
-      const response = await fetch(`http://localhost:8080/recommendations/predict/subcategory/${subcategory}`);
+      const response = await fetch(`http://localhost:8080/api/subcategory/${subcategory}`);
       const data = await response.json();
-      setSubcategoryPredictions(data);
+      setSubcategoryPredictions(Array.isArray(data) ? data : []);
       setSelectedSubcategory(subcategory);
     } catch (error) {
       console.error('Error fetching subcategory predictions:', error);
     }
   };
 
-  const renderChart = (predictions) => ({
-    labels: predictions.map(prediction => prediction.ds),
-    datasets: [
-      {
-        label: 'Predicted Trend',
-        data: predictions.map(prediction => prediction.yhat),
-        borderColor: 'blue',
-        backgroundColor: 'rgba(0, 0, 255, 0.2)',
-        fill: true,
-        tension: 0.4,
-      },
-      {
-        label: 'Lower Bound',
-        data: predictions.map(prediction => prediction.yhat_lower),
-        borderColor: 'gray',
-        backgroundColor: 'rgba(169, 169, 169, 0.3)',
-        fill: '-1',
-        tension: 0.4,
-      },
-      {
-        label: 'Upper Bound',
-        data: predictions.map(prediction => prediction.yhat_upper),
-        borderColor: 'gray',
-        backgroundColor: 'rgba(169, 169, 169, 0.3)',
-        fill: '-1',
-        tension: 0.4,
-      },
-    ],
-  });
+  const renderChart = (predictions) => {
+    if (!Array.isArray(predictions) || predictions.length === 0) {
+      return { labels: [], datasets: [] };
+    }
 
-  const renderPredictionData = (predictions) => (
-    <table>
-      <thead>
-        <tr>
-          <th>Date</th>
-          <th>Predicted Trend</th>
-          <th>Lower Bound</th>
-          <th>Upper Bound</th>
-        </tr>
-      </thead>
-      <tbody>
-        {predictions.map((prediction, index) => (
-          <tr key={index}>
-            <td>{prediction.ds}</td>
-            <td>{prediction.yhat}</td>
-            <td>{prediction.yhat_lower}</td>
-            <td>{prediction.yhat_upper}</td>
+    const labels = [];
+    const yhatData = [];
+    const lowerBound = [];
+    const upperBound = [];
+
+    for (const prediction of predictions) {
+      labels.push(prediction.ds || '');
+      yhatData.push(prediction.yhat || 0);
+      lowerBound.push(prediction.yhat_lower || 0);
+      upperBound.push(prediction.yhat_upper || 0);
+    }
+
+    return {
+      labels,
+      datasets: [
+        {
+          label: 'Predicted Trend',
+          data: yhatData,
+          borderColor: 'blue',
+          backgroundColor: 'rgba(0, 0, 255, 0.2)',
+          fill: true,
+          tension: 0.4,
+        },
+        {
+          label: 'Lower Bound',
+          data: lowerBound,
+          borderColor: 'gray',
+          backgroundColor: 'rgba(169, 169, 169, 0.3)',
+          fill: '-1',
+          tension: 0.4,
+        },
+        {
+          label: 'Upper Bound',
+          data: upperBound,
+          borderColor: 'gray',
+          backgroundColor: 'rgba(169, 169, 169, 0.3)',
+          fill: '-1',
+          tension: 0.4,
+        },
+      ],
+    };
+  };
+
+  const renderPredictionData = (predictions) => {
+    if (!Array.isArray(predictions) || predictions.length === 0) {
+      return <p>No prediction data available.</p>;
+    }
+
+    return (
+      <table>
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Predicted Trend</th>
+            <th>Lower Bound</th>
+            <th>Upper Bound</th>
           </tr>
-        ))}
-      </tbody>
-    </table>
-  );
+        </thead>
+        <tbody>
+          {predictions.map((prediction, index) => (
+            <tr key={index}>
+              <td>{prediction.ds}</td>
+              <td>{prediction.yhat}</td>
+              <td>{prediction.yhat_lower}</td>
+              <td>{prediction.yhat_upper}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    );
+  };
 
   return (
     <div>
       <h1>Fashion Sales Predictions</h1>
 
-      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <div style={{ width: '48%' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '20px' }}>
+        
+        {/* Left Section - Tables */}
+        <div style={{ flex: 1, minWidth: '300px', padding: '10px' }}>
           <h2>Overall Predictions</h2>
           {renderPredictionData(overallPredictions)}
 
@@ -129,7 +155,8 @@ export default function Predictions() {
           )}
         </div>
 
-        <div style={{ width: '48%' }}>
+        {/* Right Section - Charts */}
+        <div style={{ flex: 1, minWidth: '300px', padding: '10px' }}>
           <h2>Overall Predictions Graph</h2>
           <Line data={renderChart(overallPredictions)} />
 

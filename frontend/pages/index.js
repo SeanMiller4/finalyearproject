@@ -9,7 +9,7 @@ export default function Home() {
       <div
         className="absolute bottom-0 left-0 w-full h-32 bg-green-800"
         style={{
-          clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 70%)', // Wavy effect
+          clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 70%)', 
         }}
       ></div>
 
@@ -18,7 +18,7 @@ export default function Home() {
           Welcome to Wholesaler Wizard!
         </h1>
         <p className="text-sm text-gray-600 mb-6">
-          Smart recommendations to elevate your wholesale business.
+          Smart recommendations to elevate your agency.
         </p>
         <div className="flex space-x-4 justify-center">
           <Link href="/register">

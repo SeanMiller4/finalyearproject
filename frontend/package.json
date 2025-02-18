@@ -2,13 +2,12 @@
   "name": "frontend",
   "version": "0.1.0",
   "private": true,
-"scripts": {
-  "dev": "concurrently \"npm run start-spring\" \"next dev\"",
-  "start-spring": "cd c:/users/admin/wholesale-wizard_wholesale-wizard && mvn clean spring-boot:run -DskipTests",
-  "build": "next build",
-  "start": "next start",
-  "lint": "next lint"
-},
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
   "dependencies": {
     "@tailwindcss/postcss": "^4.0.1",
     "chart.js": "^4.4.7",

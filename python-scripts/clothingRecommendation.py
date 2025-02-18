@@ -1,9 +1,8 @@
-from flask import Flask, request, jsonify
 import pandas as pd
 from prophet import Prophet
 import requests
-
-app = Flask(__name__)
+import sys
+import json
 
 GOOGLE_MAPS_API_KEY = "AIzaSyAuWC2auTkyqnJp6RXCyrpfdh5LlTCqHyo"
 
@@ -22,8 +21,10 @@ def get_coordinates(city):
 
 def prepare_data():
     try:
-        df = pd.read_csv('Fashion_Retail_Sales.csv')
-        df.columns = df.columns.str.strip().str.lower() 
+        file_path = 'c:/users/admin/wholesale-wizard_wholesale-wizard/python-scripts/Fashion_Retail_Sales.csv'
+        df = pd.read_csv(file_path)
+        df.columns = df.columns.str.strip()
+        df.columns = df.columns.str.lower() 
 
         required_columns = ['item purchased', 'date purchase', 'purchase amount (usd)']
         if not all(col in df.columns for col in required_columns):
@@ -34,7 +35,7 @@ def prepare_data():
         df = df.dropna(subset=['ds', 'y'])
         return df
     except Exception as e:
-        print(f"Error preparing data: {e}")
+        print(f"Error preparing data: {e}", file=sys.stderr)
         return None
 
 def train_prophet(df):
@@ -49,7 +50,7 @@ def train_prophet(df):
 
         return forecast[['ds', 'yhat', 'yhat_lower', 'yhat_upper']].tail(6)
     except Exception as e:
-        print(f"Error in Prophet training: {e}")
+        print(f"Error in Prophet training: {e}", file=sys.stderr)
         return None
 
 def get_trending_product(df):
@@ -57,7 +58,7 @@ def get_trending_product(df):
     if forecast is None:
         return None
 
-    return "shoes"  
+    return "shoes" 
 
 def find_retailers(product, city):
     lat, lng = get_coordinates(city)
@@ -92,22 +93,32 @@ def find_retailers(product, city):
 
     return []
 
-@app.route('/recommend', methods=['GET'])
-def recommend_best_retailers():
-    city = request.args.get('city')
-    if not city:
-        return jsonify({"error": "City parameter is required"}), 400
-
+def main(city):
     df = prepare_data()
+    if df is None:
+        print(json.dumps({"error": "Failed to process data"}), file=sys.stderr)
+        sys.exit(1)
+
     trending_product = get_trending_product(df)
     if not trending_product:
-        return jsonify({"error": "No sales trend data available"}), 500
+        print(json.dumps({"error": "No sales trend data available"}), file=sys.stderr)
+        sys.exit(1)
 
     retailers = find_retailers(trending_product, city)
-    return jsonify({
+    if isinstance(retailers, dict) and "error" in retailers:
+        print(json.dumps(retailers), file=sys.stderr)
+        sys.exit(1)
+
+    output = {
         "trending_product": trending_product,
         "recommended_stores": retailers
-    })
+    }
+    print(json.dumps(output))
 
 if __name__ == '__main__':
-    app.run(port=5001, debug=True)
+    if len(sys.argv) != 2:
+        print(json.dumps({"error": "City parameter is required"}), file=sys.stderr)
+        sys.exit(1)
+
+    city = sys.argv[1]
+    main(city)
