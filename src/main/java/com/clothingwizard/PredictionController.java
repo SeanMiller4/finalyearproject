@@ -35,7 +35,7 @@ public class PredictionController {
     }
 
     private String callPythonScript(String category) {
-        String command = "python c:/users/admin/wholesale-wizard_wholesale-wizard/python-scripts/test.py " + category;
+        String command = "python c:/users/admin/finalyearproject/python-scripts/forecastClothingTrends.py " + category;
         try {
             Process process = Runtime.getRuntime().exec(command);
 
@@ -53,13 +53,14 @@ public class PredictionController {
             e.printStackTrace();
             return "{\"error\":\"Failed to call Python script\"}";
         }
-    } 
+    }
    
+    /*
 
     @GetMapping("/getRetailers")
     public ResponseEntity<String> getRetailers(@RequestParam String city) {
         try {
-            String command = "C:/users/admin/wholesale-wizard_wholesale-wizard/python-scripts/clothingRecommendation.py";
+            String command = "C:/users/admin/finalyearproject/python-scripts/clothingRecommendation.py";
             
             ProcessBuilder processBuilder = new ProcessBuilder("python", command, city);
             processBuilder.redirectErrorStream(true);  
@@ -80,5 +81,33 @@ public class PredictionController {
             return new ResponseEntity<>("Error executing Python script: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
+    */
+    
+    @GetMapping("/getTrendingProducts")
+    public ResponseEntity<String> getTrendingProducts() {
+    	try {
+    	ProcessBuilder processBuilder = new ProcessBuilder("python", "c:/users/admin/finalyearproject/python-scripts/test5.py");
+    	processBuilder.redirectErrorStream(true);
+    	Process process = processBuilder.start();
+    	
+    	BufferedReader br = new BufferedReader(new InputStreamReader(process.getInputStream()));
+    	StringBuilder output = new StringBuilder();
+    	String line;
+    	
+    	while((line = br.readLine()) != null) {
+    		output.append(line);
+    	}
+    	
+    	int exitCode = process.waitFor();
+    	if(exitCode == 0) {
+    		return ResponseEntity.ok(output.toString());
+    	}else {
+    		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+    				.body("Error running Script");
+    	}
+    	
+		} catch (IOException | InterruptedException e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(e.getMessage());		}
+    }
 }

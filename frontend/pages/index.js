@@ -15,7 +15,7 @@ export default function Home() {
 
          <div className="max-w-lg bg-white rounded-2xl shadow-xl p-8 text-center z-10">
         <h1 className="text-4xl font-extrabold text-green-900 mb-2">
-          Welcome to Wholesaler Wizard!
+          Welcome to Wholesaler Wizard! 
         </h1>
         <p className="text-sm text-gray-600 mb-6">
           Smart recommendations to elevate your agency.

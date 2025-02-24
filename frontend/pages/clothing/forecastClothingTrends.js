@@ -49,45 +49,20 @@ export default function Predictions() {
       return { labels: [], datasets: [] };
     }
 
-    const labels = [];
-    const yhatData = [];
-    const lowerBound = [];
-    const upperBound = [];
-
-    for (const prediction of predictions) {
-      labels.push(prediction.ds || '');
-      yhatData.push(prediction.yhat || 0);
-      lowerBound.push(prediction.yhat_lower || 0);
-      upperBound.push(prediction.yhat_upper || 0);
-    }
+    const labels = predictions.map(prediction => prediction.ds.split(' ')[0]);
+    const yhatData = predictions.map(prediction => Math.round(prediction.yhat));
 
     return {
       labels,
       datasets: [
         {
-          label: 'Predicted Trend',
+          label: 'Predicted Sales',
           data: yhatData,
           borderColor: 'blue',
           backgroundColor: 'rgba(0, 0, 255, 0.2)',
           fill: true,
           tension: 0.4,
-        },
-        {
-          label: 'Lower Bound',
-          data: lowerBound,
-          borderColor: 'gray',
-          backgroundColor: 'rgba(169, 169, 169, 0.3)',
-          fill: '-1',
-          tension: 0.4,
-        },
-        {
-          label: 'Upper Bound',
-          data: upperBound,
-          borderColor: 'gray',
-          backgroundColor: 'rgba(169, 169, 169, 0.3)',
-          fill: '-1',
-          tension: 0.4,
-        },
+        }
       ],
     };
   };
@@ -102,18 +77,14 @@ export default function Predictions() {
         <thead>
           <tr>
             <th>Date</th>
-            <th>Predicted Trend</th>
-            <th>Lower Bound</th>
-            <th>Upper Bound</th>
+            <th>Predicted Sales In USD</th>
           </tr>
         </thead>
         <tbody>
           {predictions.map((prediction, index) => (
             <tr key={index}>
-              <td>{prediction.ds}</td>
-              <td>{prediction.yhat}</td>
-              <td>{prediction.yhat_lower}</td>
-              <td>{prediction.yhat_upper}</td>
+              <td>{prediction.ds.split(' ')[0]}</td>
+              <td>{Math.round(prediction.yhat)}</td>
             </tr>
           ))}
         </tbody>
@@ -127,7 +98,6 @@ export default function Predictions() {
 
       <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '20px' }}>
         
-        {/* Left Section - Tables */}
         <div style={{ flex: 1, minWidth: '300px', padding: '10px' }}>
           <h2>Overall Predictions</h2>
           {renderPredictionData(overallPredictions)}
@@ -155,7 +125,6 @@ export default function Predictions() {
           )}
         </div>
 
-        {/* Right Section - Charts */}
         <div style={{ flex: 1, minWidth: '300px', padding: '10px' }}>
           <h2>Overall Predictions Graph</h2>
           <Line data={renderChart(overallPredictions)} />
@@ -177,4 +146,3 @@ export default function Predictions() {
     </div>
   );
 }
-
