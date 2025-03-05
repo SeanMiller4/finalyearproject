@@ -23,28 +23,28 @@ const ClothingDashboard = () => {
           onClick={() => handleNavigation('/clothing/clothingRecommendation')}
           style={buttonStyle}
         >
-          Request Wholesaler Recommendation
+           Google trends and retailer recommendations
         </button>
 
         <button
           onClick={() => handleNavigation('/clothing/clothingTrends')}
           style={buttonStyle}
         >
-          View Clothing Trends
+          View Clothing Trends from Vogue
         </button>
 
         <button
           onClick={() => handleNavigation('/clothing/clothingReports')}
           style={buttonStyle}
         >
-          View On Map
+          Sell to Retailer
         </button>
 
         <button
           onClick={() => handleNavigation('/clothing/forecastClothingTrends')}
           style={buttonStyle}
         >
-          Forecast Future Clothing Trends
+          Forecast Future Clothing Trends based on Historical Data
         </button>
 
         <button

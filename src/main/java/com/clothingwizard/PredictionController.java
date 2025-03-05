@@ -55,14 +55,14 @@ public class PredictionController {
         }
     }
    
-    /*
+    
 
     @GetMapping("/getRetailers")
-    public ResponseEntity<String> getRetailers(@RequestParam String city) {
+    public ResponseEntity<String> getRetailers(@RequestParam String product, @RequestParam String city) {
         try {
             String command = "C:/users/admin/finalyearproject/python-scripts/clothingRecommendation.py";
             
-            ProcessBuilder processBuilder = new ProcessBuilder("python", command, city);
+            ProcessBuilder processBuilder = new ProcessBuilder("python", command, product , city);
             processBuilder.redirectErrorStream(true);  
             Process process = processBuilder.start();
 
@@ -81,12 +81,12 @@ public class PredictionController {
             return new ResponseEntity<>("Error executing Python script: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    */
+    
     
     @GetMapping("/getTrendingProducts")
     public ResponseEntity<String> getTrendingProducts() {
     	try {
-    	ProcessBuilder processBuilder = new ProcessBuilder("python", "c:/users/admin/finalyearproject/python-scripts/test5.py");
+    	ProcessBuilder processBuilder = new ProcessBuilder("python", "c:/users/admin/finalyearproject/python-scripts/clothingRecommendation.py");
     	processBuilder.redirectErrorStream(true);
     	Process process = processBuilder.start();
     	
