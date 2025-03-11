@@ -84,6 +84,26 @@ const TrendingPage = () => {
     setLoadingRetailers(false);
   };
 
+  const handleSaveRetailer = async (store) => {
+    try {
+      const res = await fetch('http://localhost:8080/api/saveRetailer', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(store)
+      });
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
+      }
+      const result = await res.json();
+      alert(result.message || 'Retailer saved successfully!');
+    } catch (error) {
+      console.error(error);
+      alert('Failed to save retailer.');
+    }
+  };
+
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: 'AIzaSyAuWC2auTkyqnJp6RXCyrpfdh5LlTCqHyo'
   });
@@ -231,7 +251,13 @@ const TrendingPage = () => {
               <li key={idx} style={{ marginBottom: '1rem' }}>
                 <strong>{store.name}</strong> <br />
                 {store.address} <br />
-                Rating: {store.rating} (Popularity: {store.popularity})
+                Rating: {store.rating} (Popularity: {store.popularity}) <br />
+                <button
+                  onClick={() => handleSaveRetailer(store)}
+                  style={{ marginTop: '0.5rem' }}
+                >
+                  Save To Potentially Sell To
+                </button>
               </li>
             ))}
           </ul>

@@ -1,5 +1,6 @@
 package com.clothingwizard;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -8,6 +9,9 @@ import java.io.*;
 @RestController
 @RequestMapping("/api")
 public class PredictionController {
+	
+	@Autowired
+	private RetailerRepository retailerRepository;
 	
 	 @GetMapping("/hello")
 	    public String hello() {
@@ -109,5 +113,15 @@ public class PredictionController {
 		} catch (IOException | InterruptedException e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(e.getMessage());		}
+    }
+    
+    @PostMapping("/saveRetailer")
+    public ResponseEntity<String> saveRetailer(@RequestBody PotentialRetailer retailer) {
+    	try {
+    		retailerRepository.save(retailer);
+            return new ResponseEntity<>("{\"message\": \"Retailer saved successfully\"}", HttpStatus.OK);
+    	}catch (Exception e) {
+            return new ResponseEntity<>("{\"error\":\"Failed to save retailer: " + e.getMessage() + "\"}", HttpStatus.INTERNAL_SERVER_ERROR);
+    	}
     }
 }

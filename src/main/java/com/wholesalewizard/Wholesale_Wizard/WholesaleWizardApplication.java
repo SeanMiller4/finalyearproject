@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication(scanBasePackages = {"com.wholesalewizard.Wholesale_Wizard", "com.clothingwizard"})
 @EntityScan(basePackages = {"com.wholesalewizard.Wholesale_Wizard", "com.clothingwizard"})
+@EnableJpaRepositories(basePackages = {"com.clothingwizard", "com.wholesalewizard.Wholesale_Wizard"})
 public class WholesaleWizardApplication {
 
 	public static void main(String[] args) {
