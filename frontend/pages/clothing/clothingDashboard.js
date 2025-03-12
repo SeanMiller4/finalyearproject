@@ -127,7 +127,7 @@ export default function ClothingDashboard() {
                   </p>
                   <div className="d-flex justify-content-between align-items-center">
                     <button
-                      onClick={() => handleNavigation('/clothing/clothingReports')}
+                      onClick={() => handleNavigation('/clothing/clothingSellToRetailer')}
                       className="btn btn-sm btn-outline-primary"
                     >
                       Explore

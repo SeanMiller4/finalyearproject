@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.io.*;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -123,5 +124,11 @@ public class PredictionController {
     	}catch (Exception e) {
             return new ResponseEntity<>("{\"error\":\"Failed to save retailer: " + e.getMessage() + "\"}", HttpStatus.INTERNAL_SERVER_ERROR);
     	}
+    }
+    
+    @GetMapping("/savedRetailers")
+    public ResponseEntity<List<PotentialRetailer>> getSavedRetailers() {
+    	List<PotentialRetailer> retailers = retailerRepository.findAll();
+    	return ResponseEntity.ok(retailers);
     }
 }
