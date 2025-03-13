@@ -84,14 +84,17 @@ const TrendingPage = () => {
     setLoadingRetailers(false);
   };
 
+
   const handleSaveRetailer = async (store) => {
+    const retailerData = { ...store, product: selectedProduct };
+
     try {
       const res = await fetch('http://localhost:8080/api/saveRetailer', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(store)
+        body: JSON.stringify(retailerData)
       });
       if (!res.ok) {
         throw new Error(`HTTP error! status: ${res.status}`);
@@ -103,6 +106,7 @@ const TrendingPage = () => {
       alert('Failed to save retailer.');
     }
   };
+
 
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: 'AIzaSyAuWC2auTkyqnJp6RXCyrpfdh5LlTCqHyo'

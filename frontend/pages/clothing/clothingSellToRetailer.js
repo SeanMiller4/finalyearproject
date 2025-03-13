@@ -42,6 +42,8 @@ const SavedRetailers = () => {
               {retailer.address}
               <br />
               Rating: {retailer.rating} | Popularity: {retailer.popularity}
+			  <br />
+			  Product: {retailer.product}
             </li>
           ))}
         </ul>
