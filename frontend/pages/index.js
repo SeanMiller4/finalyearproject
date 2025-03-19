@@ -1,38 +1,71 @@
-
-import React from 'react';
+import Head from 'next/head';
 import Link from 'next/link';
 
 export default function Home() {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-green-900 p-4 relative overflow-hidden">
-    
-      <div
-        className="absolute bottom-0 left-0 w-full h-32 bg-green-800"
-        style={{
-          clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 70%)', 
-        }}
-      ></div>
+    <>
+      <Head>
+        <title>Wholesaler Wizard</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link 
+          rel="stylesheet" 
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" 
+        />
+      </Head>
 
-         <div className="max-w-lg bg-white rounded-2xl shadow-xl p-8 text-center z-10">
-        <h1 className="text-4xl font-extrabold text-green-900 mb-2">
-          Welcome to Wholesaler Wizard! 
-        </h1>
-        <p className="text-sm text-gray-600 mb-6">
-          Smart recommendations to elevate your agency.
-        </p>
-        <div className="flex space-x-4 justify-center">
-          <Link href="/register">
-            <button className="bg-green-600 text-white font-semibold py-2 px-6 rounded-lg shadow-md hover:bg-green-700 transition duration-200">
-              Register
-            </button>
-          </Link>
-          <Link href="/login">
-            <button className="bg-gray-300 text-gray-700 font-semibold py-2 px-6 rounded-lg shadow-md hover:bg-gray-400 transition duration-200">
-              Login
-            </button>
-          </Link>
+      <header>
+        <nav className="navbar navbar-dark bg-dark shadow-sm">
+          <div className="container">
+            <a href="/" className="navbar-brand">
+              Wholesaler Wizard
+            </a>
+          </div>
+        </nav>
+      </header>
+
+      <section className="py-5 text-center bg-light">
+        <div className="container">
+          <h1 className="display-4 fw-bold">Welcome to Wholesaler Wizard!</h1>
+          <p className="lead text-muted">
+            Smart recommendations to elevate your agency.
+          </p>
+        </div>
+      </section>
+
+      <div className="container my-5">
+        <div className="row justify-content-center">
+          <div className="col-md-5">
+            <div className="card shadow-sm mb-3">
+              <div className="card-body text-center">
+                <h5 className="card-title">Register</h5>
+                <p className="card-text">Create an account to get started.</p>
+                <Link href="/register" className="btn btn-primary">
+                  Register
+                </Link>
+              </div>
+            </div>
+          </div>
+          <div className="col-md-5">
+            <div className="card shadow-sm mb-3">
+              <div className="card-body text-center">
+                <h5 className="card-title">Login</h5>
+                <p className="card-text">Access your dashboard.</p>
+                <Link href="/login" className="btn btn-secondary">
+                  Login
+                </Link>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+
+      <footer className="text-muted py-4 bg-light">
+        <div className="container text-center">
+          <p className="mb-0">Wholesaler Wizard</p>
+        </div>
+      </footer>
+
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    </>
   );
 }
