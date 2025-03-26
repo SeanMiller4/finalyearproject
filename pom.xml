@@ -28,15 +28,22 @@
 	</scm>
 	<properties>
 		<java.version>17</java.version>
-		    <spring-boot.version>3.4.1</spring-boot.version> <!-- Ensure Spring Boot 3.x -->
+		    <spring-boot.version>3.4.1</spring-boot.version> 
 	</properties>
 	
 	<dependencies>
-	
+     
+     
+    <dependency>
+    <groupId>org.apache.pdfbox</groupId>
+    <artifactId>pdfbox</artifactId>
+    <version>2.0.27</version>
+    </dependency>
+
     <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-data-jpa</artifactId>
-</dependency>
+    </dependency>
 
     <dependency>
         <groupId>org.springframework.boot</groupId>
@@ -58,7 +65,7 @@
         <dependency>
         <groupId>jakarta.persistence</groupId>
         <artifactId>jakarta.persistence-api</artifactId>
-        <version>3.1.0</version> <!-- Ensure you're using Jakarta persistence API -->
+        <version>3.1.0</version> 
     </dependency>
     
     <dependency>
