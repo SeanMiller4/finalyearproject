@@ -14,6 +14,7 @@ public class User {
 	private int id;
 	
 	private String username;
+	private String email;
 	private String password;
 	private String productCategory;
 	
@@ -47,6 +48,14 @@ public class User {
 
 	public void setProductCategory(String productCategory) {
 		this.productCategory = productCategory;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 	
 

@@ -10,11 +10,14 @@ public class UserService {
 	@Autowired
 	private UserRepository ur;
 	
+	private static final String DOMAIN = "@irishagencies.com";
+	
 	public User registerUser(String username, String password, String productCategory) {
 		User user = new User();
 		user.setUsername(username);
 		user.setPassword(password);
 		user.setProductCategory(productCategory);
+		user.setEmail(username + DOMAIN);
 		return ur.save(user);
 	}
 	

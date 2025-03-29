@@ -14,6 +14,7 @@ public class PotentialRetailer {
 	private int id;
 	
 	private String name;
+	private String email;
     private String address;
     private double rating;
     private int popularity;
@@ -70,5 +71,11 @@ public class PotentialRetailer {
 	}
 	public void setProduct(String product) {
 		this.product = product;
+	}
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
 	}    
 }

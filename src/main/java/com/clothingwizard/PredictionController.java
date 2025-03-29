@@ -1,7 +1,9 @@
 package com.clothingwizard;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.io.*;
@@ -13,6 +15,9 @@ public class PredictionController {
 	
 	@Autowired
 	private RetailerRepository retailerRepository;
+	
+	@Autowired
+	private OrderService orderService;
 	
 	 @GetMapping("/hello")
 	    public String hello() {
@@ -130,5 +135,17 @@ public class PredictionController {
     public ResponseEntity<List<PotentialRetailer>> getSavedRetailers() {
     	List<PotentialRetailer> retailers = retailerRepository.findAll();
     	return ResponseEntity.ok(retailers);
+    }
+    
+    @PostMapping("/orders")
+    public ResponseEntity<byte[]> createOrder(@RequestParam Long retailerId, @RequestParam String product, @RequestParam double price, @RequestParam int quantity) throws IOException {
+    	
+    	byte[] invoiceBytes = orderService.createOrder(retailerId, product, price, quantity);
+    	
+    	HttpHeaders headers = new HttpHeaders();
+    	headers.setContentType(MediaType.APPLICATION_PDF);
+    	headers.add("Content-Disposition", "incline; filename=invoice.pdf");
+    	
+    	return ResponseEntity.ok().headers(headers).body(invoiceBytes);
     }
 }

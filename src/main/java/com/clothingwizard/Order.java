@@ -18,7 +18,7 @@ public class Order {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
-	private int retailerId;
+	private String retailer;
 	private String product;
 	private Double price;
 	private int quantity;
@@ -34,12 +34,12 @@ public class Order {
 		this.id = id;
 	}
 
-	public int getRetailerId() {
-		return retailerId;
+	public String getRetailer() {
+		return retailer;
 	}
 
-	public void setRetailerId(int retailerId) {
-		this.retailerId = retailerId;
+	public void setRetailer(String retailer) {
+		this.retailer = retailer;
 	}
 
 	public String getProduct() {
