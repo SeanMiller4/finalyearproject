@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
+import Head from 'next/head'
 import { Line } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
 export default function Predictions() {
-  const [overallPredictions, setOverallPredictions] = useState([]);
+  const router = useRouter();
   const [clothingPredictions, setClothingPredictions] = useState([]);
-  const [accessoriesPredictions, setAccessoriesPredictions] = useState([]);
   const [subcategoryPredictions, setSubcategoryPredictions] = useState([]);
   const [selectedSubcategory, setSelectedSubcategory] = useState('');
 
@@ -17,14 +18,11 @@ export default function Predictions() {
         const responses = await Promise.all([
           fetch('http://localhost:8080/api'),
           fetch('http://localhost:8080/api/clothing'),
-          fetch('http://localhost:8080/api/accessories')
         ]);
 
-        const [overall, clothing, accessories] = await Promise.all(responses.map(res => res.json()));
+        const [clothing] = await Promise.all(responses.map(res => res.json()));
 
-        setOverallPredictions(Array.isArray(overall) ? overall : []);
         setClothingPredictions(Array.isArray(clothing) ? clothing : []);
-        setAccessoriesPredictions(Array.isArray(accessories) ? accessories : []);
       } catch (error) {
         console.error('Error fetching predictions:', error);
       }
@@ -92,57 +90,94 @@ export default function Predictions() {
     );
   };
 
+  const handleNavigation = (path) => {
+	router.push(path);
+  };
+  
+  const handleLogout = () => {
+	alert('Logged out!');
+	router.push('/login');
+  };
+  
   return (
-    <div>
-      <h1>Fashion Sales Predictions</h1>
+	<>
+	<Head>
+	  <title>Fashion Sales Predictions</title>
+	  <meta name="viewport" content="width=device-width, initial-scale=1" />
+	  <link
+	    rel="stylesheet"
+		href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+	  />
+	</Head>
+	
+	<header>
+	  <nav className="navbar navbar-dark bg-dark shadow-sm">
+	    <div className="container">
+		  <a href="#" className="navbar-brand d-flex align-items-center">
+		    <strong>Clothing Dashboard</strong>
+		  </a>
+		</div>
+	  </nav>
+	</header>
+	
+	<section className="py-5 text-center bg-light">
+	  <div className="container">
+	    <h1 className="display-4 fw-bold">Fashion Sales Predictions</h1>
+	    <p className="lead text-muted">
+	      Detailed predictions for clothing and subcategory trends.
+	    </p>
+	  </div>
+	</section>
 
-      <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '20px' }}>
-        
-        <div style={{ flex: 1, minWidth: '300px', padding: '10px' }}>
-          <h2>Overall Predictions</h2>
-          {renderPredictionData(overallPredictions)}
-
-          <h2>Clothing Predictions</h2>
-          {renderPredictionData(clothingPredictions)}
-
-          <h2>Accessories Predictions</h2>
-          {renderPredictionData(accessoriesPredictions)}
-
-          <h2>Subcategory Predictions</h2>
-          <input
-            type="text"
-            placeholder="Enter subcategory"
-            value={selectedSubcategory}
-            onChange={(e) => setSelectedSubcategory(e.target.value)}
-          />
-          <button onClick={() => fetchSubcategoryPredictions(selectedSubcategory)}>Fetch Subcategory Predictions</button>
-
-          {subcategoryPredictions.length > 0 && (
-            <>
-              <h2>Predictions for {selectedSubcategory}</h2>
-              {renderPredictionData(subcategoryPredictions)}
-            </>
-          )}
-        </div>
-
-        <div style={{ flex: 1, minWidth: '300px', padding: '10px' }}>
-          <h2>Overall Predictions Graph</h2>
-          <Line data={renderChart(overallPredictions)} />
-
-          <h2>Clothing Predictions Graph</h2>
-          <Line data={renderChart(clothingPredictions)} />
-
-          <h2>Accessories Predictions Graph</h2>
-          <Line data={renderChart(accessoriesPredictions)} />
-
-          {subcategoryPredictions.length > 0 && (
-            <>
-              <h2>Predictions for {selectedSubcategory} Graph</h2>
-              <Line data={renderChart(subcategoryPredictions)} />
-            </>
-          )}
-        </div>
+	<main className="container my-4">
+	  <div className="row">
+	    <div className="col-md-6">
+		  <h2>Clothing Predictions</h2>
+		  {renderPredictionData(clothingPredictions)}
+		  
+		  <h2>Subcategory Predictions</h2>
+		  <div className="mb-3">
+		  <input
+		    type="text"
+			className="form-control"
+			placeholder="Enter subcategory"
+			value={selectedSubcategory}
+			onChange={(e) => setSelectedSubcategory(e.target.value)}
+	      />
+		</div>
+		<button onClick={() => fetchSubcategoryPredictions(selectedSubcategory)} className="btn btn-outline-primary mb-3">
+		  Fetch Subcategory Predictions
+		</button>
+		{subcategoryPredictions.length > 0 && (
+          <>
+		    <h2>Predictions for {selectedSubcategory}</h2>
+			{renderPredictionData(subcategoryPredictions)}
+		  </>
+		)}
       </div>
-    </div>
-  );
+	  
+	  <div className="col-md-6">
+		<h2 className="mt-4">Clothing Predictions Graph</h2>
+		<Line data={renderChart(clothingPredictions)} />
+
+		{subcategoryPredictions.length > 0 && (
+			<>
+			  <h2 className="mt-4">Predictions for {selectedSubcategory} Graph</h2>
+			  <Line data={renderChart(subcategoryPredictions)} />
+			</>
+		  )}
+		</div>
+	  </div>
+   </main>
+   
+   <footer className="text-muted py-4 bg-light">
+     <div className="container text-center">
+	   <p className="mb-0">Clothing Agency Dashboard</p>
+	   <p><a href="#">Back to top</a></p>
+	 </div>
+   </footer>
+   
+   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" />
+  </>
+ );
 }
