@@ -138,13 +138,13 @@ public class PredictionController {
     }
     
     @PostMapping("/orders")
-    public ResponseEntity<byte[]> createOrder(@RequestParam Long retailerId, @RequestParam String product, @RequestParam double price, @RequestParam int quantity) throws IOException {
+    public ResponseEntity<byte[]> createOrder(@RequestBody Order order) throws IOException {
     	
-    	byte[] invoiceBytes = orderService.createOrder(retailerId, product, price, quantity);
+    	byte[] invoiceBytes = orderService.createOrder(order);
     	
     	HttpHeaders headers = new HttpHeaders();
     	headers.setContentType(MediaType.APPLICATION_PDF);
-    	headers.add("Content-Disposition", "incline; filename=invoice.pdf");
+    	headers.add("Content-Disposition", "inline; filename=invoice.pdf");
     	
     	return ResponseEntity.ok().headers(headers).body(invoiceBytes);
     }

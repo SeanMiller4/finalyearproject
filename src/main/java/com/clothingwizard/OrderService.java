@@ -20,16 +20,11 @@ public class OrderService {
 	@Autowired
 	private EmailService emailService;
 	
-	public byte[] createOrder(Long retailerId, String product, double price, int quantity) throws IOException {
-		
-		 PotentialRetailer retailer = retailerRepository.findById(retailerId).orElseThrow(() -> new RuntimeException("Retailer not found"));	
-		 
-		 Order order = new Order();
-		 order.setRetailer(retailer.getName());
-		 order.setProduct(product);
-		 order.setPrice(price);
-		 order.setQuantity(quantity);
+	public byte[] createOrder(Order order) throws IOException {
+				 
 		 orderRepository.save(order);
+		 
+		 PotentialRetailer retailer = retailerRepository.findByName(order.getRetailer());
 		 
 		 byte[] invoiceBytes = invoiceService.generateInvoice(retailer, order);
 		 

@@ -5,4 +5,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface RetailerRepository extends JpaRepository<PotentialRetailer, Long> {
+	PotentialRetailer findByName(String name);
 }

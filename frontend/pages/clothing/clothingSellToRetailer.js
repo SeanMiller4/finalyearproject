@@ -41,8 +41,8 @@ export default function SavedRetailers() {
     e.preventDefault();
 
     const orderData = {
-      retailerId: selectedRetailer.id,
-      productId: selectedRetailer.product?.id,
+      retailer: selectedRetailer.name,
+      product: selectedRetailer.product ? (selectedRetailer.product.name || selectedRetailer.product) : "",
       price: parseFloat(price),
       quantity: parseInt(quantity),
     };
