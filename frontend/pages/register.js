@@ -6,7 +6,7 @@ import Link from 'next/link';
 export default function Register() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [category, setCategory] = useState('Home Goods');
+  const [category, setCategory] = useState('Clothing');
   const [error, setError] = useState('');
   const router = useRouter();
 
@@ -48,7 +48,7 @@ export default function Register() {
       <nav className="navbar navbar-dark bg-dark shadow-sm">
         <div className="container">
           <Link href="/" className="navbar-brand">
-            <strong>My App</strong>
+            <strong>Retail Wizard</strong>
           </Link>
         </div>
       </nav>
@@ -107,8 +107,6 @@ export default function Register() {
                       onChange={(e) => setCategory(e.target.value)}
                     >
                       <option>Clothing</option>
-                      <option>Toys</option>
-                      <option>Electronics</option>
                     </select>
                   </div>
 
