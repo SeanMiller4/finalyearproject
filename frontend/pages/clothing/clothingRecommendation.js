@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
 import { GoogleMap, Marker, useLoadScript } from '@react-google-maps/api';
+import BarChart from './barchart';
 
 const mapContainerStyle = {
   width: '100%',
@@ -113,6 +114,28 @@ const TrendingPage = () => {
 
   if (loadError) return <div>Error loading maps.</div>;
   if (!isLoaded) return <div>Loading Maps...</div>;
+  
+  const itemsYouSellProducts = trendingData["Items_You_Sell_Only"]
+  ? Object.keys(trendingData["Items_You_Sell_Only"])
+  : [];
+  const itemsYouSellValues = trendingData["Items_You_Sell_Only"]
+  ? Object.values(trendingData["Items_You_Sell_Only"])
+  : [];
+  
+  const zaraItemsProducts = trendingData["Zara_Only_Items"]
+  ? Object.keys(trendingData["Zara_Only_Items"])
+  : [];
+  const zaraItemsValues = trendingData["Zara_Only_Items"]
+  ? Object.values(trendingData["Zara_Only_Items"])
+  : [];
+  
+  const commonItemsProducts = trendingData["Items_You_Sell_That_Zara_Sells"]
+  ? Object.keys(trendingData["Items_You_Sell_That_Zara_Sells"])
+  : [];
+  const commonItemsValues = trendingData["Items_You_Sell_That_Zara_Sells"]
+  ? Object.values(trendingData["Items_You_Sell_That_Zara_Sells"])
+  : [];
+  
 
   return (
     <>
@@ -293,6 +316,36 @@ const TrendingPage = () => {
             </div>
           </div>
         )}
+		{trendingData["Items_You_Sell_Only"] && (
+			<div className="my-5">
+			<h2 className="mb-3">Trending Bar Chart: Items for Sale</h2>
+			<BarChart
+		      labels={itemsYouSellProducts}
+			  dataset={itemsYouSellValues}
+			  chartTitle="Items You Sell"
+			  />
+			</div>
+		)}
+		{trendingData["Zara_Only_Items"] && (
+		    <div className="my-5">
+			<h2 className="mb-3">Trending Bar Chart: Zara Items</h2>
+			<BarChart
+			  labels={zaraItemsProducts}
+			  dataset={zaraItemsValues}
+			  chartTitle="Zara Only Items"
+			/>
+		  </div>
+		)}
+		{trendingData["Items_You_Sell_That_Zara_Sells"] && (
+		    <div className="my-5">
+			<h2 className="mb-3">Trending Bar Chart: Common Items</h2>
+			<BarChart
+		      labels={commonItemsProducts}
+			  dataset={commonItemsValues}
+			  chartTitle="Common Items"
+			/>
+		  </div>
+		)}
       </main>
 
       <footer className="text-muted py-4 bg-light">
