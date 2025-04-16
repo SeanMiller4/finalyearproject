@@ -14,9 +14,9 @@ const barChart = ({ labels, dataset, chartTitle }) => {
 			borderColor: 'rgba(54, 162, 235, 1)',
 			borderWidth: 1
 		},
-	  ],
+		],
 	};
-	
+
 	const config = {
 		scales: {
 			y: {
@@ -24,7 +24,7 @@ const barChart = ({ labels, dataset, chartTitle }) => {
 			}
 		}
 	};
-	
+
 	return <Bar data={data} options={config} />
 };
 
