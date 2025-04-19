@@ -141,41 +141,6 @@ def extract_level2_subcategories(carousel_html):
     return subcategories
 
 # finding retailers based on google ratings and google places api.
-
-PRODUCT_TO_RETAILER_QUERY = {
-    'T-shirt': 't-shirt store',
-    'Tunic': 'tunic store',
-    'Tank Top': 'tank top store',
-    'Leggings': 'leggings store',
-    'Onesie': 'onesie store',
-    'Jacket': 'jacket store',
-    'Trousers': 'trouser store',
-    'Jeans': 'jeans store',
-    'Trench Coat': 'trench coat store',
-    'Pajamas': 'pajamas store',
-    'Romper': 'romper store',
-    'Shorts': 'shorts store',
-    'Blazer': 'blazer store',
-    'Dress': 'dress boutique',
-    'Cardigan': 'cardigan store',
-    'Camisole': 'camisole store',
-    'Socks': 'sock store',
-    'Blouse': 'blouse store',
-    'Loafers': 'loafers store',
-    'Slippers': 'slippers store',
-    'Vest': 'vest store',
-    'Sandals': 'sandals store',
-    'Jumpsuit': 'jumpsuit store',
-    'Raincoat': 'raincoat store',
-    'Coat': 'coat store',
-    'Kimono': 'kimono store',
-    'Skirt': 'skirt store',
-    'Swimsuit': 'swimsuit store',
-    'Boots': 'boot store',
-    'Sneakers': 'sneaker store',
-    'Sweater': 'sweater store'
-}
-
 def get_coordinates(city):
     url = "https://maps.googleapis.com/maps/api/geocode/json"
     params = {"address": city, "key": GOOGLE_MAPS_API_KEY}
@@ -190,7 +155,7 @@ def find_retailers(product, city):
     lat, lng = get_coordinates(city)
     if lat is None or lng is None:
         return {"error": "Invalid city name"}
-    query = PRODUCT_TO_RETAILER_QUERY.get(product, f"{product} store")
+    query = f"{product} store"
     url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json"
     params = {
         "key": GOOGLE_MAPS_API_KEY,
@@ -198,22 +163,22 @@ def find_retailers(product, city):
         "radius": 10000,
         "keyword": query
     }
+    
     response = requests.get(url, params=params)
     data = response.json()
-    if "results" in data:
-        retailers = []
-        for place in data["results"]:
-            retailers.append({
-                "name": place["name"],
-                "address": place.get("vicinity", "No address available"),
-                "rating": place.get("rating", 0),
-                "popularity": place.get("user_ratings_total", 0),
-                "lat": place["geometry"]["location"]["lat"],
-                "lng": place["geometry"]["location"]["lng"]
-            })
-        retailers.sort(key=lambda x: (x["rating"], x["popularity"]), reverse=True)
-        return retailers[:5]
-    return []
+    
+    retailers = []
+    for place in data["results"]:
+        retailers.append({
+            "name": place["name"],
+            "address": place.get("vicinity", "No address available"),
+            "rating": place.get("rating", 0),
+            "popularity": place.get("user_ratings_total", 0),
+            "lat": place["geometry"]["location"]["lat"],
+            "lng": place["geometry"]["location"]["lng"]
+       })
+    retailers.sort(key=lambda x: (x["rating"], x["popularity"]), reverse=True)
+    return retailers[:5]
 
 def main():
     if len(sys.argv) == 1:
