@@ -1,4 +1,4 @@
-package com.clothingwizard;
+package com.seanmiller.email;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -8,6 +8,9 @@ import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.springframework.stereotype.Service;
+
+import com.seanmiller.entity.Order;
+import com.seanmiller.entity.PotentialRetailer;
 
 
 @Service

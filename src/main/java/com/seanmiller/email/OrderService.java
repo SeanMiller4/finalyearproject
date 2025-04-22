@@ -1,9 +1,14 @@
-package com.clothingwizard;
+package com.seanmiller.email;
 
 import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.seanmiller.entity.Order;
+import com.seanmiller.entity.PotentialRetailer;
+import com.seanmiller.repository.OrderRepository;
+import com.seanmiller.repository.RetailerRepository;
 
 @Service
 public class OrderService {

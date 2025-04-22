@@ -1,4 +1,4 @@
-package com.clothingwizard;
+package com.seanmiller.entity;
 
 import java.util.Date;
 

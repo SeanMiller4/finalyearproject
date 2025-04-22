@@ -1,8 +1,11 @@
 
-package com.wholesalewizard.Wholesale_Wizard;
+package com.seanmiller.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.seanmiller.entity.User;
+import com.seanmiller.repository.UserRepository;
 
 @Service
 public class UserService {

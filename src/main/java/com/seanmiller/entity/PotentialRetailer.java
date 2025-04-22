@@ -1,4 +1,4 @@
-package com.clothingwizard;
+package com.seanmiller.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

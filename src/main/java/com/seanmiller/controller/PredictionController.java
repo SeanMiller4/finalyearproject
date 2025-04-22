@@ -1,4 +1,4 @@
-package com.clothingwizard;
+package com.seanmiller.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -6,6 +6,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import com.seanmiller.email.OrderService;
+import com.seanmiller.entity.Order;
+import com.seanmiller.entity.PotentialRetailer;
+import com.seanmiller.repository.RetailerRepository;
+
 import java.io.*;
 import java.util.List;
 

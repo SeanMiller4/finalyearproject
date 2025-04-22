@@ -1,9 +1,13 @@
-package com.wholesalewizard.Wholesale_Wizard;
+package com.seanmiller.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import com.seanmiller.entity.User;
+import com.seanmiller.repository.UserRepository;
+import com.seanmiller.service.UserService;
 
 @RestController
 @RequestMapping("/user")

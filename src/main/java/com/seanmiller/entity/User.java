@@ -1,5 +1,5 @@
 
-package com.wholesalewizard.Wholesale_Wizard;
+package com.seanmiller.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
