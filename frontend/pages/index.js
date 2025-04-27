@@ -5,7 +5,7 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>Wholesaler Wizard</title>
+        <title>Retailer Wizard</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link 
           rel="stylesheet" 
@@ -17,7 +17,7 @@ export default function Home() {
         <nav className="navbar navbar-dark bg-dark shadow-sm">
           <div className="container">
             <a href="/" className="navbar-brand">
-              Wholesaler Wizard
+              Retailer Wizard
             </a>
           </div>
         </nav>
@@ -25,7 +25,7 @@ export default function Home() {
 
       <section className="py-5 text-center bg-light">
         <div className="container">
-          <h1 className="display-4 fw-bold">Welcome to Wholesaler Wizard!</h1>
+          <h1 className="display-4 fw-bold">Welcome to Retailer Wizard!</h1>
           <p className="lead text-muted">
             Smart recommendations to elevate your agency.
           </p>
@@ -61,7 +61,7 @@ export default function Home() {
 
       <footer className="text-muted py-4 bg-light">
         <div className="container text-center">
-          <p className="mb-0">Wholesaler Wizard</p>
+          <p className="mb-0">Retailer Wizard</p>
         </div>
       </footer>
 

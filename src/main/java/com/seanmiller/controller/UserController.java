@@ -35,8 +35,9 @@ public class UserController {
 
 	@PostMapping("/login")
 	public ResponseEntity<User> loginUser(@RequestBody User user) {
-		if (us.validateUser(user.getUsername(), user.getPassword())) {
+		if (us.existsByUsernameAndPassword(user.getUsername(), user.getPassword())) {
 			User foundUser = ur.findByUsername(user.getUsername());
+			foundUser.setPassword(null);
 			return new ResponseEntity<>(foundUser, HttpStatus.OK);
 		} else {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);

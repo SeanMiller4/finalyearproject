@@ -4,9 +4,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class WholesaleWizardApplication {
+public class RetailWizardApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(WholesaleWizardApplication.class, args);
+		SpringApplication.run(RetailWizardApplication.class, args);
 	}
 }

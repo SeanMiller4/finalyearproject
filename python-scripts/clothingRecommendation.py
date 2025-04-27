@@ -80,23 +80,13 @@ def get_woman_subcategories():
     
     driver.get(url)
     
-    try:
-        menu_button = wait.until(
-            EC.element_to_be_clickable((By.CSS_SELECTOR, "button[data-qa-id='layout-header-toggle-menu']"))
-        )
-        driver.execute_script("arguments[0].scrollIntoView();", menu_button)
-        driver.execute_script("arguments[0].click();", menu_button)
-    except Exception as e:
-        print("Menu button not clickable:", e)
-        driver.quit()
-        return []
-    
-    try:
-        wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, ".layout-categories")))
-    except Exception as e:
-        print("Sidebar did not load:", e)
-        driver.quit()
-        return []
+    time.sleep(5);
+
+    menu_button = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "button[data-qa-id='layout-header-toggle-menu']")))
+    driver.execute_script("arguments[0].click();", menu_button)
+
+    wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, ".layout-categories")))
+
     
     try:
         woman_link = wait.until(

@@ -31,5 +31,9 @@ public class UserService {
 	  }
 	  return false;
 	}
+	
+	public boolean existsByUsernameAndPassword(String username, String password) {
+		return ur.existsByUsernameAndPassword(username, password);
+	}
 }
 

@@ -1,31 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
-import { GoogleMap, Marker, useLoadScript } from '@react-google-maps/api';
 import BarChart from './barchart';
+import dynamic from 'next/dynamic';
 
-const mapContainerStyle = {
-	width: '100%',
-	height: '400px'
-};
-
-const RetailersMap = ({ retailers }) => {
-	const center =
-		retailers.length > 0
-			? { lat: retailers[0].lat, lng: retailers[0].lng }
-			: { lat: 53.3498, lng: -6.2603 };
-
-	return (
-		<GoogleMap mapContainerStyle={mapContainerStyle} center={center} zoom={13}>
-			{retailers.map((retailer, idx) => (
-				<Marker
-					key={idx}
-					position={{ lat: retailer.lat, lng: retailer.lng }}
-					title={retailer.name}
-				/>
-			))}
-		</GoogleMap>
-	);
-};
+const RetailersMap = dynamic(
+	() => import('/src/components/RetailersMap'),
+	{ ssr: false }
+);
 
 const TrendingPage = () => {
 	const [loadingTrending, setLoadingTrending] = useState(false);
@@ -106,14 +87,10 @@ const TrendingPage = () => {
 			console.error(error);
 			alert('Failed to save retailer.');
 		}
-	};
-
-	const { isLoaded, loadError } = useLoadScript({
-		googleMapsApiKey: 'AIzaSyAuWC2auTkyqnJp6RXCyrpfdh5LlTCqHyo'
-	});
-
-	if (loadError) return <div>Error loading maps.</div>;
-	if (!isLoaded) return <div>Loading Maps...</div>;
+	};	
+	
+	const isZaraProduct = selectedProduct && trendingData["Zara_Only_Items"] 
+		&& Object.prototype.hasOwnProperty.call(trendingData["Zara_Only_Items"], selectedProduct);
 
 	const itemsYouSellProducts = trendingData["Items_You_Sell_Only"]
 		? Object.keys(trendingData["Items_You_Sell_Only"])
@@ -300,13 +277,15 @@ const TrendingPage = () => {
 									<strong>{store.name}</strong> <br />
 									{store.address} <br />
 									Rating: {store.rating} (Popularity: {store.popularity}) <br />
+									{!isZaraProduct && (
 									<button
 										onClick={() => handleSaveRetailer(store)}
 										className="btn btn-sm btn-outline-primary mt-2"
 									>
 										Save To Potentially Sell To
 									</button>
-								</li>
+								)}
+							 </li>
 							))}
 						</ul>
 						<div className="card">
