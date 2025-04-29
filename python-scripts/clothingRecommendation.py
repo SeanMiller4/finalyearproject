@@ -38,7 +38,7 @@ def get_trending_data_batch(batch, max_retries=5):
     delay = 2
     while retries < max_retries:
         try:
-            pytrends.build_payload(batch, cat=0, timeframe='now 7-d', geo='')
+            pytrends.build_payload(batch, cat=0, timeframe='now 7-d', geo='IE')
             trend_data = pytrends.interest_over_time()
             if trend_data.empty:
                 return {}

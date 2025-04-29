@@ -248,14 +248,29 @@ const TrendingPage = () => {
 						<div className="card-body">
 							<h2 className="card-title">Selected Product: {selectedProduct}</h2>
 							<div className="mb-3">
-								<label className="form-label">Enter City:</label>
-								<input
-									type="text"
-									className="form-control"
+								<label className="form-label">Select City:</label>
+								<select
+									className="form-select"
 									value={city}
 									onChange={(e) => setCity(e.target.value)}
-									placeholder="City"
-								/>
+								>
+								<option value="">Choose a city</option>
+								<option value="Dublin">Dublin</option>
+								<option value="Cork">Cork</option>
+								<option value="Athlone">Athlone</option>
+								<option value="Galway">Galway</option>
+								<option value="Kilkenny">Kilkenny</option>
+								<option value="Letterkenny">Letterkenny</option>
+								<option value="Limerick">Limerick</option>
+								<option value="Waterford">Waterford</option>
+								<option value="Wexford">Wexford</option>
+								<option value="Belfast">Belfast</option>
+								<option value="Newry">Newry</option>
+								<option value="Carlow">Carlow</option>
+								<option value="Ennis">Ennis</option>
+								<option value="Derry">Derry</option>
+								<option value="Tralee">Tralee</option>
+								</select>
 							</div>
 							<button onClick={fetchRetailers} className="btn btn-primary">
 								Get Retailers

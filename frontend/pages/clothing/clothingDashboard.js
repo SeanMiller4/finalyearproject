@@ -123,7 +123,7 @@ export default function ClothingDashboard() {
 								/>
 								<div className="card-body">
 									<p className="card-text">
-										Sell to Retailer or generate automated clothing reports.
+										Sell to Retailer and generate automated clothing invoices.
 									</p>
 									<div className="d-flex justify-content-between align-items-center">
 										<button
