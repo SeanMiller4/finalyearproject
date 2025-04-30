@@ -3,35 +3,23 @@ from prophet import Prophet
 import sys
 import json
 
-CATEGORY_MAPPING = {
-    'Clothing': ['T-shirt', 'Tunic', 'Tank Top', 'Leggings', 'Onesie', 'Jacket', 'Trousers', 'Jeans', 'Trench Coat', 'Pajamas', 'Romper', 'Shorts', 'Blazer', 'Dress', 'Cardigan', 'Camisole', 'Socks', 'Blouse', 'Loafers', 'Slippers', 'Vest', 'Sandals', 'Jumpsuit', 'Raincoat', 'Coat', 'Kimono', 'Skirt', 'Swimsuit', 'Boots', 'Sneakers', 'Sweater'],
-    'Accessories': ['Handbag', 'Wallet', 'Bag', 'Hat', 'Bowtie', 'Poncho', 'Gloves', 'Flip-Flops', 'Backpack', 'Scarf', 'Umbrella', 'Sun Hat', 'Belt', 'Sunglasses', 'Tie']
-}
-
-def categorize_item(item_name):
-    item_name = item_name.lower()
-    for category, items in CATEGORY_MAPPING.items():
-        for item in items:
-            if item.lower() in item_name:
-                return category, item
-    return 'Other', 'Unknown'
+def extract_keywords_from_csv(item):
+    return item.strip().title() if isinstance(item, str) else 'Unknown'
 
 def prepare_data():
     try:
-        file_path = 'c:/users/admin/wholesale-wizard_wholesale-wizard/python-scripts/Fashion_Retail_Sales.csv'
-        df = pd.read_csv(file_path)
-        df.columns = df.columns.str.strip()
-        df.columns = df.columns.str.lower()
+        df = pd.read_csv("c:/users/admin/finalyearproject/python-scripts/csvforfyp.csv")
+        df.columns = df.columns.str.strip().str.lower()
 
         required_columns = ['item purchased', 'purchase amount (usd)', 'date purchase']
         if not all(column in df.columns for column in required_columns):
             return None
 
-        df[['category', 'subcategory']] = df['item purchased'].apply(lambda x: pd.Series(categorize_item(x)))
+        df['subcategory'] = df['item purchased'].apply(extract_keywords_from_csv)
+        df['category'] = 'Clothing'
 
         df = df.rename(columns={'purchase amount (usd)': 'y', 'date purchase': 'ds'})
         df['ds'] = pd.to_datetime(df['ds'], errors='coerce')
-
         df = df.dropna(subset=['ds', 'y'])
 
         return df
@@ -63,7 +51,12 @@ if __name__ == "__main__":
     command = sys.argv[1].lower() if len(sys.argv) > 1 else None
 
     df = prepare_data()
-    if command in ["overall", "clothing", "accessories"]:
+    if df is None:
+        result = {"error": "Failed to prepare data"}
+    elif command == "subcategories":
+        subcategories = sorted(df['subcategory'].dropna().unique().tolist()) 
+        result = subcategories if subcategories else {"error": "No subcategories found."}        
+    elif command in ["overall", "clothing"]:
         if command == "overall":
             result = train_prophet(df)
         else:

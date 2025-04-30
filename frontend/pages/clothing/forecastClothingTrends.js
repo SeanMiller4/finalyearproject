@@ -11,6 +11,7 @@ export default function Predictions() {
 	const [clothingPredictions, setClothingPredictions] = useState([]);
 	const [subcategoryPredictions, setSubcategoryPredictions] = useState([]);
 	const [selectedSubcategory, setSelectedSubcategory] = useState('');
+	const [subcategories, setSubcategories] = useState([]);
 
 	useEffect(() => {
 		const fetchPredictions = async () => {
@@ -27,8 +28,15 @@ export default function Predictions() {
 				console.error('Error fetching predictions:', error);
 			}
 		};
+		
+		const fetchSubcategories = async () => {
+				const response = await fetch('http://localhost:8080/api/subcategories');
+				const data = await response.json();
+				setSubcategories(data);
+			}
 
 		fetchPredictions();
+		fetchSubcategories();
 	}, []);
 
 	const fetchSubcategoryPredictions = async (subcategory) => {
@@ -137,13 +145,18 @@ export default function Predictions() {
 
 						<h2>Subcategory Predictions</h2>
 						<div className="mb-3">
-							<input
-								type="text"
-								className="form-control"
-								placeholder="Enter subcategory"
-								value={selectedSubcategory}
-								onChange={(e) => setSelectedSubcategory(e.target.value)}
-							/>
+							<select
+							className="form-select"
+							value={selectedSubcategory}
+							onChange={(e) => setSelectedSubcategory(e.target.value)}
+							>
+							<option value="">Select a Subcategory</option>
+							{subcategories.map((subcategory) => (
+								<option key={subcategory} value={subcategory}>
+								{subcategory}
+								</option>
+							))}
+							</select>
 						</div>
 						<button onClick={() => fetchSubcategoryPredictions(selectedSubcategory)} className="btn btn-outline-primary mb-3">
 							Fetch Subcategory Predictions

@@ -40,14 +40,14 @@ public class PredictionController {
 		return callPythonScript("clothing");
 	}
 
-	@GetMapping("/accessories")
-	public String getAccessoriesPredictions() {
-		return callPythonScript("accessories");
-	}
-
 	@GetMapping("/subcategory/{subcategory}")
 	public String getSubcategoryPredictions(@PathVariable String subcategory) {
 		return callPythonScript(subcategory);
+	}
+	
+	@GetMapping("/subcategories")
+	public ResponseEntity<String> getSubcategories() {
+		return callPythonScriptForSubcategories();
 	}
 
 	private String callPythonScript(String category) {
@@ -68,6 +68,28 @@ public class PredictionController {
 		} catch (IOException | InterruptedException e) {
 			e.printStackTrace();
 			return "{\"error\":\"Failed to call Python script\"}";
+		}
+	}
+	
+	private ResponseEntity<String> callPythonScriptForSubcategories() {
+		String command = "python c:/users/admin/finalyearproject/python-scripts/forecastClothingTrends.py subcategories";
+		try {
+			Process process = Runtime.getRuntime().exec(command);
+			
+		    BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+		    StringBuilder output = new StringBuilder();
+		    String line;
+		    while((line = reader.readLine()) != null) { 
+			    output.append(line);
+		    }
+		
+		    process.waitFor();
+		
+		    return ResponseEntity.ok(output.toString());
+		
+		} catch(IOException | InterruptedException e) {
+			return new ResponseEntity<>("Error executing Python script: " + e.getMessage(),
+					HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 

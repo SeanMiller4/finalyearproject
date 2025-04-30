@@ -11,6 +11,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from bs4 import BeautifulSoup
+import pandas as pd
 
 GOOGLE_MAPS_API_KEY = "AIzaSyAuWC2auTkyqnJp6RXCyrpfdh5LlTCqHyo"
 
@@ -169,17 +170,21 @@ def find_retailers(product, city):
        })
     retailers.sort(key=lambda x: (x["rating"], x["popularity"]), reverse=True)
     return retailers[:5]
+    
+def extract_keywords_from_csv(column_name):
+    df = pd.read_csv("c:/users/admin/finalyearproject/python-scripts/csvforfyp.csv")
+    all_items = df[column_name].dropna().astype(str).tolist()
+    keywords = set()
+    for item in all_items:
+        clean_item = item.strip().title()
+        keywords.add(clean_item)
+    return list(keywords)
 
 def main():
     if len(sys.argv) == 1:
         zara_keywords = get_woman_subcategories()
-        csv_keywords = [
-            'T-shirt', 'Tunic', 'Tank Top', 'Leggings', 'Onesie', 'Jacket',
-            'Trousers', 'Jeans', 'Trench Coat', 'Pajamas', 'Romper', 'Shorts',
-            'Blazer', 'Dress', 'Cardigan', 'Camisole', 'Socks', 'Blouse',
-            'Loafers', 'Slippers', 'Vest', 'Sandals', 'Jumpsuit', 'Raincoat',
-            'Coat', 'Kimono', 'Skirt', 'Swimsuit', 'Boots', 'Sneakers', 'Sweater'
-        ]
+        
+        csv_keywords = extract_keywords_from_csv("Item Purchased")
         
         csv_trending = get_trending_data_for_keywords(csv_keywords)
         zara_trending = get_trending_data_for_keywords(zara_keywords)
