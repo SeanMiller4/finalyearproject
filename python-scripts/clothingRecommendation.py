@@ -15,6 +15,8 @@ import pandas as pd
 
 GOOGLE_MAPS_API_KEY = "AIzaSyAuWC2auTkyqnJp6RXCyrpfdh5LlTCqHyo"
 
+ANCHOR = "clothing"
+
 warnings.filterwarnings("ignore", category=FutureWarning)
 
 # initialize the inflect engine for normalization, (groups same words that end in "s", lowers caps, etc.)
@@ -30,9 +32,11 @@ def normalize_keyword(keyword):
 
 pytrends = TrendReq(hl='en-GB', tz=360)
 
-def batch_keywords(keywords, batch_size=5):
-    for i in range(0, len(keywords), batch_size):
-        yield keywords[i:i + batch_size]
+def batch_with_anchor(keywords, batch_size=5):
+    payload_size = batch_size - 1
+    for i in range(0, len(keywords), payload_size):
+        batch = keywords[i:i + payload_size]
+        yield [ANCHOR] + batch
 
 def get_trending_data_batch(batch, max_retries=5):
     retries = 0
@@ -43,7 +47,15 @@ def get_trending_data_batch(batch, max_retries=5):
             trend_data = pytrends.interest_over_time()
             if trend_data.empty:
                 return {}
-            return {kw: trend_data[kw].mean() for kw in batch}
+             means = {kw: trend_data[kw].mean() for kw in batch}
+             anchor_mean = means.get(ANCHOR)
+             if not anchor_mean:
+                 return {}
+             return {
+                 kw: round((means[kw] / anchor_mean) * 100, 1)
+                 for kw in batch
+                 if kw != ANCHOR
+             }
         except Exception as e:
             if "429" in str(e):
                 time.sleep(delay)

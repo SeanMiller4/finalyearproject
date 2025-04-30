@@ -150,7 +150,7 @@ public class PredictionController {
 	@PostMapping("/saveRetailer")
 	public ResponseEntity<String> saveRetailer(@RequestBody PotentialRetailer retailer) {
 		try {
-			retailer.setEmail(retailer.getName() + "@retailer.ie");
+			retailer.setEmail(retailer.getName().replaceAll("\\s+", "").toLowerCase() + "@retailer.ie");
 			retailerRepository.save(retailer);
 			return new ResponseEntity<>("{\"message\": \"Retailer saved successfully\"}", HttpStatus.OK);
 		} catch (Exception e) {
