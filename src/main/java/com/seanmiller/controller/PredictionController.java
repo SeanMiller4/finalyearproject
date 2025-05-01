@@ -216,4 +216,10 @@ public class PredictionController {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 		}
 	}
+
+	@DeleteMapping("/retailers/{id}")
+	public ResponseEntity<Void> deleteRetailer(@PathVariable int id) {
+		retailerRepository.deleteById(id);
+		return ResponseEntity.noContent().build();
+	}
 }

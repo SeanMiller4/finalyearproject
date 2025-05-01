@@ -50,6 +50,14 @@ export default function SavedRetailers() {
 		setOrderStatus('');
 	};
 
+	const handleDeleteClick = async (id) => {
+		if (!confirm('Are you sure you want to delete this retailer?')) return;
+		const res = await fetch(`http://localhost:8080/api/retailers/${id}`,
+			{ method: 'DELETE' }
+		);
+		setRetailers(prev => prev.filter(r => r.id !== id));
+	};
+
 	const handleOrderSubmit = async (e) => {
 		e.preventDefault();
 
@@ -147,6 +155,12 @@ export default function SavedRetailers() {
 													onClick={() => handleSellClick(retailer)}
 												>
 													Sell
+												</button>
+												<button
+													className="btn btn-danger"
+													onClick={() => handleDeleteClick(retailer.id)}
+												>
+													Delete
 												</button>
 											</div>
 										</div>
