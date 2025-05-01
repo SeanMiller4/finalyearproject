@@ -6,21 +6,28 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.seanmiller.email.OrderService;
 import com.seanmiller.entity.Order;
 import com.seanmiller.entity.PotentialRetailer;
+import com.seanmiller.entity.User;
 import com.seanmiller.repository.RetailerRepository;
+import com.seanmiller.repository.UserRepository;
 
 import java.io.*;
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api")
 public class PredictionController {
 
 	@Autowired
 	private RetailerRepository retailerRepository;
+
+	@Autowired
+	private UserRepository userRepository;
 
 	@Autowired
 	private OrderService orderService;
@@ -44,7 +51,7 @@ public class PredictionController {
 	public String getSubcategoryPredictions(@PathVariable String subcategory) {
 		return callPythonScript(subcategory);
 	}
-	
+
 	@GetMapping("/subcategories")
 	public ResponseEntity<String> getSubcategories() {
 		return callPythonScriptForSubcategories();
@@ -70,24 +77,24 @@ public class PredictionController {
 			return "{\"error\":\"Failed to call Python script\"}";
 		}
 	}
-	
+
 	private ResponseEntity<String> callPythonScriptForSubcategories() {
 		String command = "python c:/users/admin/finalyearproject/python-scripts/forecastClothingTrends.py subcategories";
 		try {
 			Process process = Runtime.getRuntime().exec(command);
-			
-		    BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-		    StringBuilder output = new StringBuilder();
-		    String line;
-		    while((line = reader.readLine()) != null) { 
-			    output.append(line);
-		    }
-		
-		    process.waitFor();
-		
-		    return ResponseEntity.ok(output.toString());
-		
-		} catch(IOException | InterruptedException e) {
+
+			BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+			StringBuilder output = new StringBuilder();
+			String line;
+			while ((line = reader.readLine()) != null) {
+				output.append(line);
+			}
+
+			process.waitFor();
+
+			return ResponseEntity.ok(output.toString());
+
+		} catch (IOException | InterruptedException e) {
 			return new ResponseEntity<>("Error executing Python script: " + e.getMessage(),
 					HttpStatus.INTERNAL_SERVER_ERROR);
 		}
@@ -148,8 +155,12 @@ public class PredictionController {
 	}
 
 	@PostMapping("/saveRetailer")
-	public ResponseEntity<String> saveRetailer(@RequestBody PotentialRetailer retailer) {
+	public ResponseEntity<String> saveRetailer(@RequestBody PotentialRetailer retailer,
+			@RequestParam("userId") int userId) {
 		try {
+			User user = userRepository.findById(userId)
+					.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+			retailer.setUser(user);
 			retailer.setEmail(retailer.getName().replaceAll("\\s+", "").toLowerCase() + "@retailer.ie");
 			retailerRepository.save(retailer);
 			return new ResponseEntity<>("{\"message\": \"Retailer saved successfully\"}", HttpStatus.OK);
@@ -160,8 +171,10 @@ public class PredictionController {
 	}
 
 	@GetMapping("/savedRetailers")
-	public ResponseEntity<List<PotentialRetailer>> getSavedRetailers() {
-		List<PotentialRetailer> retailers = retailerRepository.findAll();
+	public ResponseEntity<List<PotentialRetailer>> getSavedRetailers(@RequestParam("userId") int userId) {
+		User user = userRepository.findById(userId)
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+		List<PotentialRetailer> retailers = retailerRepository.findByUserId(user.getId());
 		return ResponseEntity.ok(retailers);
 	}
 

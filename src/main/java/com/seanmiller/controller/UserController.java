@@ -9,6 +9,7 @@ import com.seanmiller.entity.User;
 import com.seanmiller.repository.UserRepository;
 import com.seanmiller.service.UserService;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/user")
 public class UserController {

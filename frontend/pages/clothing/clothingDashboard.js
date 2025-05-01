@@ -1,8 +1,19 @@
 import Head from 'next/head';
 import { useRouter } from 'next/router';
+import { useAuth } from '../../src/contexts/AuthorisationContext';
+import React, { useState, useEffect } from 'react';
 
 export default function ClothingDashboard() {
 	const router = useRouter();
+	const { currentUser } = useAuth();
+	
+	useEffect(() => {
+		if(!currentUser) window.location.href = '/login';
+	}, [currentUser]);
+	
+	if(!currentUser) {
+		return null;
+	}
 
 	const handleLogout = () => {
 		alert('Logged out!');
@@ -148,7 +159,7 @@ export default function ClothingDashboard() {
 								/>
 								<div className="card-body">
 									<p className="card-text">
-										Forecast future clothing trends based on historical data.
+										Forecast future clothing sales based on historical data.
 									</p>
 									<div className="d-flex justify-content-between align-items-center">
 										<button

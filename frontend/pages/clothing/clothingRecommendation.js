@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
 import BarChart from './barchart';
 import dynamic from 'next/dynamic';
+import { useAuth } from '../../src/contexts/AuthorisationContext';
 
 const RetailersMap = dynamic(
 	() => import('/src/components/RetailersMap'),
@@ -9,6 +10,8 @@ const RetailersMap = dynamic(
 );
 
 const TrendingPage = () => {
+	const { currentUser } = useAuth();
+
 	const [loadingTrending, setLoadingTrending] = useState(false);
 	const [trendingData, setTrendingData] = useState({
 		"Items_You_Sell_Only": null,
@@ -45,6 +48,10 @@ const TrendingPage = () => {
 		fetchTrendingProducts();
 	}, []);
 
+	useEffect(() => {
+		if (!currentUser) window.location.href = '/login';
+	}, [currentUser]);
+
 	const fetchRetailers = async () => {
 		if (!selectedProduct || !city) return;
 		setLoadingRetailers(true);
@@ -71,7 +78,7 @@ const TrendingPage = () => {
 		const retailerData = { ...store, product: selectedProduct };
 
 		try {
-			const res = await fetch('http://localhost:8080/api/saveRetailer', {
+			const res = await fetch(`http://localhost:8080/api/saveRetailer?userId=${currentUser.id}`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json'
@@ -87,9 +94,9 @@ const TrendingPage = () => {
 			console.error(error);
 			alert('Failed to save retailer.');
 		}
-	};	
-	
-	const isZaraProduct = selectedProduct && trendingData["Zara_Only_Items"] 
+	};
+
+	const isZaraProduct = selectedProduct && trendingData["Zara_Only_Items"]
 		&& Object.prototype.hasOwnProperty.call(trendingData["Zara_Only_Items"], selectedProduct);
 
 	const itemsYouSellProducts = trendingData["Items_You_Sell_Only"]
@@ -254,22 +261,22 @@ const TrendingPage = () => {
 									value={city}
 									onChange={(e) => setCity(e.target.value)}
 								>
-								<option value="">Choose a city</option>
-								<option value="Dublin">Dublin</option>
-								<option value="Cork">Cork</option>
-								<option value="Athlone">Athlone</option>
-								<option value="Galway">Galway</option>
-								<option value="Kilkenny">Kilkenny</option>
-								<option value="Letterkenny">Letterkenny</option>
-								<option value="Limerick">Limerick</option>
-								<option value="Waterford">Waterford</option>
-								<option value="Wexford">Wexford</option>
-								<option value="Belfast">Belfast</option>
-								<option value="Newry">Newry</option>
-								<option value="Carlow">Carlow</option>
-								<option value="Ennis">Ennis</option>
-								<option value="Derry">Derry</option>
-								<option value="Tralee">Tralee</option>
+									<option value="">Choose a city</option>
+									<option value="Dublin">Dublin</option>
+									<option value="Cork">Cork</option>
+									<option value="Athlone">Athlone</option>
+									<option value="Galway">Galway</option>
+									<option value="Kilkenny">Kilkenny</option>
+									<option value="Letterkenny">Letterkenny</option>
+									<option value="Limerick">Limerick</option>
+									<option value="Waterford">Waterford</option>
+									<option value="Wexford">Wexford</option>
+									<option value="Belfast">Belfast</option>
+									<option value="Newry">Newry</option>
+									<option value="Carlow">Carlow</option>
+									<option value="Ennis">Ennis</option>
+									<option value="Derry">Derry</option>
+									<option value="Tralee">Tralee</option>
 								</select>
 							</div>
 							<button onClick={fetchRetailers} className="btn btn-primary">
@@ -293,14 +300,14 @@ const TrendingPage = () => {
 									{store.address} <br />
 									Rating: {store.rating} (Popularity: {store.popularity}) <br />
 									{!isZaraProduct && (
-									<button
-										onClick={() => handleSaveRetailer(store)}
-										className="btn btn-sm btn-outline-primary mt-2"
-									>
-										Save To Potentially Sell To
-									</button>
-								)}
-							 </li>
+										<button
+											onClick={() => handleSaveRetailer(store)}
+											className="btn btn-sm btn-outline-primary mt-2"
+										>
+											Save To Potentially Sell To
+										</button>
+									)}
+								</li>
 							))}
 						</ul>
 						<div className="card">

@@ -47,15 +47,15 @@ def get_trending_data_batch(batch, max_retries=5):
             trend_data = pytrends.interest_over_time()
             if trend_data.empty:
                 return {}
-             means = {kw: trend_data[kw].mean() for kw in batch}
-             anchor_mean = means.get(ANCHOR)
-             if not anchor_mean:
-                 return {}
-             return {
-                 kw: round((means[kw] / anchor_mean) * 100, 1)
-                 for kw in batch
-                 if kw != ANCHOR
-             }
+            means = {kw: trend_data[kw].mean() for kw in batch}
+            anchor_mean = means.get(ANCHOR)
+            if not anchor_mean:
+                return {}
+            return {
+                kw: round((means[kw] / anchor_mean) * 100, 1)
+                for kw in batch
+                if kw != ANCHOR
+            }
         except Exception as e:
             if "429" in str(e):
                 time.sleep(delay)
@@ -68,7 +68,7 @@ def get_trending_data_batch(batch, max_retries=5):
 
 def get_trending_data_for_keywords(keywords):
     trending_data = {}
-    for batch in batch_keywords(keywords, batch_size=5):
+    for batch in batch_with_anchor(keywords, batch_size=5):
         batch_data = get_trending_data_batch(batch)
         trending_data.update(batch_data)
         time.sleep(10) 

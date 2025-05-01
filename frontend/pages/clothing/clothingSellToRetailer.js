@@ -1,7 +1,18 @@
 import Head from 'next/head';
 import React, { useState, useEffect } from 'react';
+import { useAuth } from '../../src/contexts/AuthorisationContext';
 
 export default function SavedRetailers() {
+	const { currentUser } = useAuth();
+
+	useEffect(() => {
+		if (!currentUser) window.location.href = '/login';
+	}, [currentUser]);
+
+	if (!currentUser) {
+		return null;
+	}
+
 	const [retailers, setRetailers] = useState([]);
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState('');
@@ -11,10 +22,12 @@ export default function SavedRetailers() {
 	const [orderStatus, setOrderStatus] = useState('');
 
 	useEffect(() => {
+		if (!currentUser || !currentUser.id) return;
+
 		const fetchRetailers = async () => {
 			setLoading(true);
 			try {
-				const response = await fetch('http://localhost:8080/api/savedRetailers');
+				const response = await fetch(`http://localhost:8080/api/savedRetailers?userId=${currentUser.id}`);
 				if (!response.ok) {
 					throw new Error(`HTTP error! status: ${response.status}`);
 				}
@@ -28,7 +41,7 @@ export default function SavedRetailers() {
 		};
 
 		fetchRetailers();
-	}, []);
+	}, [currentUser.id]);
 
 	const handleSellClick = (retailer) => {
 		setSelectedRetailer(retailer);
