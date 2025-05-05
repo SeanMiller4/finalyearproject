@@ -52,20 +52,6 @@ export default function ClothingDashboard() {
 					<p className="lead text-muted">
 						Manage your clothing agency with functions to see what clothing items are trending on Google, receive retailer recommendations for specific items of clothing, view social clothing trends and more.
 					</p>
-					<div>
-						<button
-							onClick={() => handleNavigation('/clothing/clothingRecommendation')}
-							className="btn btn-primary m-1"
-						>
-							Main call to action
-						</button>
-						<button
-							onClick={() => handleNavigation('/clothing/clothingTrends')}
-							className="btn btn-secondary m-1"
-						>
-							Secondary action
-						</button>
-					</div>
 				</div>
 			</section>
 

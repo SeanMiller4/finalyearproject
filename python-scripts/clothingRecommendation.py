@@ -78,7 +78,8 @@ def get_trending_data_for_keywords(keywords):
 
 DISALLOWED_SUBCATEGORIES = {
     "THE NEW", "ZARA HAIR", "SPECIAL PRICES", "HOME", "SKI COLLECTION",
-    "ZARA PRE-OWNED", "SALE", "GIFT CARD", "JOIN LIFE", "+ INFO", "CAREERS", "STORES"
+    "ZARA PRE-OWNED", "SALE", "GIFT CARD", "JOIN LIFE", "+ INFO", "CAREERS", "STORES",
+    "HOLIDAY MOOD", "EVENTS", "ZARA STREAMING", "HOME", "GIFTS", "BASICS", "SPECIAL EDITION", "DRESSES"
 }
 
 def get_woman_subcategories():
