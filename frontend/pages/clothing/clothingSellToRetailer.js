@@ -183,7 +183,7 @@ export default function SavedRetailers() {
 									</p>
 									<form onSubmit={handleOrderSubmit}>
 										<div className="mb-3">
-											<label className="form-label">Price:</label>
+											<label className="form-label">Price (In Units):</label>
 											<input
 												type="number"
 												step="0.5"
@@ -194,7 +194,7 @@ export default function SavedRetailers() {
 											/>
 										</div>
 										<div className="mb-3">
-											<label className="form-label">Quantity:</label>
+											<label className="form-label">Quantity (In Units):</label>
 											<input
 												type="number"
 												className="form-control"

@@ -41,7 +41,7 @@ def train_prophet(df):
 
         forecast['ds'] = forecast['ds'].dt.strftime('%Y-%m-%d %H:%M:%S')
 
-        return forecast[['ds', 'yhat', 'yhat_lower', 'yhat_upper']].tail(6).to_dict('records')
+        return forecast[['ds', 'yhat', 'yhat_lower', 'yhat_upper']].tail(12).to_dict('records')
 
     except Exception as e:
         print(f"Error in train_prophet: {e}")
@@ -56,18 +56,11 @@ if __name__ == "__main__":
     elif command == "subcategories":
         subcategories = sorted(df['subcategory'].dropna().unique().tolist()) 
         result = subcategories if subcategories else {"error": "No subcategories found."}        
-    elif command in ["overall", "clothing"]:
-        if command == "overall":
-            result = train_prophet(df)
-        else:
-            category_df = df[df['category'].str.lower() == command]
-            result = train_prophet(category_df)
+    elif command in ["overall"]:
+        result = train_prophet(df)
     elif command:
         subcategory_df = df[df['subcategory'].str.lower() == command]
-        if not subcategory_df.empty:
-            result = train_prophet(subcategory_df)
-        else:
-            result = {"error": f"Subcategory '{command}' not found in the data."}
+        result = train_prophet(subcategory_df)
     else:
         result = {"error": "Invalid command"}
 

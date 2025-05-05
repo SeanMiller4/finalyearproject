@@ -5,7 +5,7 @@ import React, { useState, useEffect } from 'react';
 
 export default function ClothingDashboard() {
 	const router = useRouter();
-	const { currentUser } = useAuth();
+	const { currentUser, logout } = useAuth();
 	
 	useEffect(() => {
 		if(!currentUser) window.location.href = '/login';
@@ -15,9 +15,10 @@ export default function ClothingDashboard() {
 		return null;
 	}
 
-	const handleLogout = () => {
-		alert('Logged out!');
-		router.push('/login');
+	const handleLogout = async () => {
+		await logout();
+		alert('You are now logged out');
+		router.pusg('/login');
 	};
 
 	const handleNavigation = (path) => {
