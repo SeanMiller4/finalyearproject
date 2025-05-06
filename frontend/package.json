@@ -3,7 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "clean-spring": "rimraf C:/Users/Admin/finalyearproject/target",
+    "start-spring": "npm run clean-spring && cd C:/Users/Admin/finalyearproject && mvn clean compile spring-boot:run -DskipTests",
+    "next-dev": "next dev",
+    "dev": "concurrently -k \"npm run start-spring\" \"npm run next-dev\"",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -18,6 +21,8 @@
   },
   "devDependencies": {
     "autoprefixer": "^10.4.20",
-    "postcss": "^8.5.1"
+    "concurrently": "^9.1.2",
+    "postcss": "^8.5.1",
+    "rimraf": "^6.0.1"
   }
 }
